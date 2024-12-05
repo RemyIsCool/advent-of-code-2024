@@ -9,6 +9,7 @@ import (
 func main() {
 	rawInput, _ := os.ReadFile("input.txt")
 	inputString := string(rawInput)
+	// Input must be padded with 4 "." characters.
 	input := strings.Split(inputString, "\n")
 
 	xmases := 0
