@@ -1,3 +1,4 @@
+# requires you to install tqdm from pip or your distro's package manager
 from tqdm import tqdm
 
 
