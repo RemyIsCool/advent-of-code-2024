@@ -5,7 +5,6 @@ import (
 	"math/rand"
 	"os"
 	"regexp"
-	"slices"
 	"strconv"
 	"strings"
 )
@@ -94,7 +93,15 @@ func main() {
 	antinodesFinal := []antinode{}
 
 	for _, antinode := range antinodes {
-		if !slices.Contains(antinodesFinal, antinode) && antinode.position.row >= 0 && antinode.position.row < len(inputLines)-1 && antinode.position.column >= 0 && antinode.position.column < len(inputLines[0]) {
+		duplicate := false
+
+		for _, finalAntinode := range antinodesFinal {
+			if finalAntinode.position == antinode.position {
+				duplicate = true
+			}
+		}
+
+		if !duplicate && antinode.position.row >= 0 && antinode.position.row < len(inputLines)-1 && antinode.position.column >= 0 && antinode.position.column < len(inputLines[0]) {
 			antinodesFinal = append(antinodesFinal, antinode)
 		}
 	}
@@ -109,7 +116,7 @@ func main() {
 
 	coloursMap := map[string]string{}
 
-	fmt.Println()
+	fmt.Println(antinodesFinal)
 
 	for i, line := range inputLines {
 		lineFinal := []string{}
