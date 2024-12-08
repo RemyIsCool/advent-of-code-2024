@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 	"os"
 	"regexp"
 	"slices"
@@ -17,6 +18,11 @@ type position struct {
 type antenna struct {
 	position  position
 	frequency string
+}
+
+type antinode struct {
+	position position
+	antenna  antenna
 }
 
 func main() {
@@ -54,7 +60,7 @@ func main() {
 		antennaGroups[foundAntenna.frequency] = append(antennaGroups[foundAntenna.frequency], foundAntenna)
 	}
 
-	antinodes := []position{}
+	antinodes := []antinode{}
 
 	for _, antennaGroup := range antennaGroups {
 		pairs := [][]antenna{}
@@ -70,14 +76,14 @@ func main() {
 
 			offset := position{first.position.row - last.position.row, first.position.column - last.position.column}
 
-			antinodes = append(antinodes, first.position, last.position)
+			antinodes = append(antinodes, antinode{first.position, first}, antinode{last.position, last})
 
 			firstAntinode := position{first.position.row + offset.row, first.position.column + offset.column}
 			lastAntinode := position{last.position.row - offset.row, last.position.column - offset.column}
 
 			for firstAntinode.row >= 0 && firstAntinode.row < len(inputLines)-1 && firstAntinode.column >= 0 && firstAntinode.column < len(inputLines[0]) ||
 				lastAntinode.row >= 0 && lastAntinode.row < len(inputLines)-1 && lastAntinode.column >= 0 && lastAntinode.column < len(inputLines[0]) {
-				antinodes = append(antinodes, firstAntinode, lastAntinode)
+				antinodes = append(antinodes, antinode{firstAntinode, first}, antinode{lastAntinode, last})
 
 				firstAntinode = position{firstAntinode.row + offset.row, firstAntinode.column + offset.column}
 				lastAntinode = position{lastAntinode.row - offset.row, lastAntinode.column - offset.column}
@@ -85,23 +91,51 @@ func main() {
 		}
 	}
 
-	antinodesFinal := []position{}
+	antinodesFinal := []antinode{}
 
 	for _, antinode := range antinodes {
-		if !slices.Contains(antinodesFinal, antinode) && antinode.row >= 0 && antinode.row < len(inputLines)-1 && antinode.column >= 0 && antinode.column < len(inputLines[0]) {
+		if !slices.Contains(antinodesFinal, antinode) && antinode.position.row >= 0 && antinode.position.row < len(inputLines)-1 && antinode.position.column >= 0 && antinode.position.column < len(inputLines[0]) {
 			antinodesFinal = append(antinodesFinal, antinode)
 		}
 	}
+
+	currentColour := 0
+	colours := []string{"31", "32", "33", "34", "35", "36", "91", "92", "93", "94", "95", "96"}
+
+	for i := range colours {
+		j := rand.Intn(i + 1)
+		colours[i], colours[j] = colours[j], colours[i]
+	}
+
+	coloursMap := map[string]string{}
 
 	fmt.Println()
 
 	for i, line := range inputLines {
 		lineFinal := []string{}
 		for j, char := range line {
-			if char == '.' && slices.Contains(antinodesFinal, position{i, j}) {
-				lineFinal = append(lineFinal, "\033[0;31m#\033[0m")
+			color := ""
+
+			for _, antinode := range antinodesFinal {
+				if antinode.position == (position{i, j}) {
+					_, exists := coloursMap[antinode.antenna.frequency]
+					if !exists {
+						coloursMap[antinode.antenna.frequency] = colours[currentColour]
+						currentColour = (currentColour + 1) % len(colours)
+					}
+					color = coloursMap[antinode.antenna.frequency]
+				}
+			}
+
+			if char == '.' && color != "" {
+				lineFinal = append(lineFinal, "\033[0;"+color+"m#\033[0m")
 			} else if r.Match([]byte{byte(char)}) {
-				lineFinal = append(lineFinal, "\033[0;32m"+string(char)+"\033[0m")
+				_, exists := coloursMap[string(char)]
+				if !exists {
+					coloursMap[string(char)] = colours[currentColour]
+					currentColour = (currentColour + 1) % len(colours)
+				}
+				lineFinal = append(lineFinal, "\033[0;"+coloursMap[string(char)]+"m"+string(char)+"\033[0m")
 			} else {
 				lineFinal = append(lineFinal, "\033[0;90m"+string(char)+"\033[0m")
 			}
