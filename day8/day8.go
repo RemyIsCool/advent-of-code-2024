@@ -116,7 +116,7 @@ func main() {
 
 	coloursMap := map[string]string{}
 
-	fmt.Println(antinodesFinal)
+	fmt.Println()
 
 	for i, line := range inputLines {
 		lineFinal := []string{}
