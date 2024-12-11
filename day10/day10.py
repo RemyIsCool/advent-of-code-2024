@@ -1,7 +1,7 @@
 from typing import List, Tuple
 
 with open("input.txt", "r") as file:
-	input = list(map(lambda s: s.strip(), file.readlines()))
+	input = [s.strip() for s in file.readlines()]
 
 
 found_nines: List[List[Tuple[int, int]]] = []
@@ -54,7 +54,7 @@ for x, line in enumerate(input):
 			found_nines.append([])
 			search_around(position, len(found_nines) - 1)
 
-deduplicated = list(map(lambda nines: list(set(nines)), found_nines))
+deduplicated = [list(set(nines)) for nines in found_nines]
 
 answer1 = 0
 
