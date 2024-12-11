@@ -33,8 +33,6 @@ def search_around(position: Tuple[int, int], zero_index_found_nines: int):
 		if around_value != value + 1:
 			continue
 
-		print(x, y)
-
 		if around_value == 9:
 			found_nines[zero_index_found_nines].append((x, y))
 		else:
@@ -43,11 +41,6 @@ def search_around(position: Tuple[int, int], zero_index_found_nines: int):
 	for position in found_positions:
 		search_around(position, zero_index_found_nines)
 
-
-for line in input:
-	print(line)
-
-print()
 
 for x, line in enumerate(input):
 	for y, numStr in enumerate(line):
@@ -61,11 +54,17 @@ for x, line in enumerate(input):
 			found_nines.append([])
 			search_around(position, len(found_nines) - 1)
 
-# deduplicated = list(map(lambda nines: list(set(nines)), found_nines))
+deduplicated = list(map(lambda nines: list(set(nines)), found_nines))
 
-answer = 0
-# for l in deduplicated:
+answer1 = 0
+
+for l in deduplicated:
+	answer1 += len(l)
+
+answer2 = 0
+
 for l in found_nines:
-	answer += len(l)
+	answer2 += len(l)
 
-print(answer)
+print("Part 1:", answer1)
+print("Part 2:", answer2)
