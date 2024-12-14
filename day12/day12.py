@@ -55,7 +55,6 @@ def count_sides(cells: List[Position]) -> int:
 
 	side_count = 0
 
-	# top to bottom
 	for x in range(max_x+1):
 		slice: List[Position] = []
 
@@ -75,6 +74,7 @@ def count_sides(cells: List[Position]) -> int:
 
 			if slice[y-1][1] != cell[1] - 1:
 				side_count += 1
+
 	for x in range(max_x+1):
 		slice: List[Position] = []
 
@@ -94,6 +94,7 @@ def count_sides(cells: List[Position]) -> int:
 
 			if slice[y-1][1] != cell[1] - 1:
 				side_count += 1
+
 	for x in range(max_y+1):
 		slice: List[Position] = []
 
@@ -113,6 +114,7 @@ def count_sides(cells: List[Position]) -> int:
 
 			if slice[y-1][0] != cell[0] - 1:
 				side_count += 1
+
 	for x in range(max_y+1):
 		slice: List[Position] = []
 
@@ -141,9 +143,6 @@ side_counts: List[int] = []
 
 for region in regions:
 	side_counts.append(count_sides(region))
-
-
-print(side_counts)
 
 
 total_price = 0
