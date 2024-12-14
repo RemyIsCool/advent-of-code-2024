@@ -61,7 +61,6 @@ while not found_tree:
         line = "".join(line)
         if "########" in line:
             found_tree = True
-            print(x)
             break
 
     if found_tree:
