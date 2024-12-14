@@ -52,7 +52,8 @@ for machine_string in machines_strings:
                 b = position
             case "Prize":
                 # Add 10 trillion for part 2
-                prize = position + Position(10_000_000_000_000, 10_000_000_000_000)
+                ten_trillion = 10_000_000_000_000
+                prize = position + Position(ten_trillion, ten_trillion)
 
     machines.append(Machine(a, b, prize))
 
@@ -74,5 +75,6 @@ for machine in machines:
         == machine.prize
     ):
         answer += a * 3 + b
+
 
 print(answer)

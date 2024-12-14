@@ -4,36 +4,36 @@ lines = f.readlines()
 answer = 0
 
 for line in lines:
-	test, equation = line.split(":")
-	test = int(test)
-	equation = equation.strip()
-	space_count = equation.count(" ")
-	binary_operators_max = int("1" * space_count, 2)
+    test, equation = line.split(":")
+    test = int(test)
+    equation = equation.strip()
+    space_count = equation.count(" ")
+    binary_operators_max = int("1" * space_count, 2)
 
-	possible = False
-	
-	for x in range(binary_operators_max+1):
-		binary_string = bin(x)[2:]
-		if len(binary_string) < space_count:
-			binary_string = "0" * (space_count - len(binary_string)) + binary_string
-		operators_string = binary_string.replace("0", "*").replace("1", "+")
+    possible = False
 
-		with_operators = "(" * space_count
+    for x in range(binary_operators_max + 1):
+        binary_string = bin(x)[2:]
+        if len(binary_string) < space_count:
+            binary_string = "0" * (space_count - len(binary_string)) + binary_string
+        operators_string = binary_string.replace("0", "*").replace("1", "+")
 
-		for char in equation:
-			if char != " ":
-				with_operators += char
-				continue
+        with_operators = "(" * space_count
 
-			with_operators += ")" + operators_string[0]
+        for char in equation:
+            if char != " ":
+                with_operators += char
+                continue
 
-			operators_string = operators_string[1:]
+            with_operators += ")" + operators_string[0]
 
-		if eval(with_operators) == test:
-			possible = True
-			break
-	
-	if possible:
-		answer += test
+            operators_string = operators_string[1:]
+
+        if eval(with_operators) == test:
+            possible = True
+            break
+
+    if possible:
+        answer += test
 
 print(answer)
