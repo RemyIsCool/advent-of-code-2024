@@ -15,12 +15,12 @@ class Robot:
 
 
 with open("input.txt", "r") as f:
-    input = f.readlines()
+    input_lines = f.readlines()
 
 
 robots: List[Robot] = []
 
-for line in input:
+for line in input_lines:
     line = line.strip()
 
     position = Vector(0, 0)
@@ -40,22 +40,14 @@ for line in input:
 WIDTH, HEIGHT = 101, 103
 
 
-def print_robots(robots: List[Robot]):
+# Part 2
+found_tree = False
+
+x = 0
+while not found_tree:
+    x += 1
     grid = [["." for _ in range(WIDTH)] for _ in range(HEIGHT)]
 
-    for robot in robots:
-        grid[robot.position.y][robot.position.x] = "#"
-
-    for line in grid:
-        print("".join(line))
-
-    print()
-
-
-ITERATIONS = 10000
-
-
-for x in range(ITERATIONS):
     for robot in robots:
         robot.position.x += robot.velocity.x
         robot.position.y += robot.velocity.y
@@ -63,9 +55,23 @@ for x in range(ITERATIONS):
         robot.position.x %= WIDTH
         robot.position.y %= HEIGHT
 
-    print(f"Iteration {x+1}:")
-    print_robots(robots)
+        grid[robot.position.y][robot.position.x] = "#"
 
+    for line in grid:
+        line = "".join(line)
+        if "########" in line:
+            found_tree = True
+            print(x)
+            break
+
+    if found_tree:
+        for line in grid:
+            print("".join(line))
+
+print("Found a Christmas tree on iteration", x)
+
+
+# Part 1
 
 # quadrants: List[List[Robot]] = [[] for _ in range(4)]
 #
