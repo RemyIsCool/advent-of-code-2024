@@ -1,11 +1,13 @@
 from dataclasses import dataclass
 from typing import List
 
+import sympy as sp
+
 
 @dataclass
 class Position:
-    x: int
-    y: int
+    x: float
+    y: float
 
     def __add__(self, other):
         return Position(self.x + other.x, self.y + other.y)
@@ -57,24 +59,28 @@ for machine_string in machines_strings:
 
     machines.append(Machine(a, b, prize))
 
-
 answer = 0
 
 for machine in machines:
-    a = int(
-        (machine.prize.x * machine.b.y - machine.prize.y * machine.b.x)
-        / (machine.a.x * machine.b.y - machine.a.y * machine.b.x)
-    )
-    b = int(
-        (machine.a.x * machine.prize.y - machine.a.y * machine.prize.x)
-        / (machine.a.x * machine.b.y - machine.a.y * machine.b.x)
-    )
+    a, b = sp.symbols("a b")
+
+    eqx = sp.Eq(a * machine.a.x + b * machine.b.x, machine.prize.x)
+    eqy = sp.Eq(a * machine.a.y + b * machine.b.y, machine.prize.y)
+
+    result = sp.solve([eqx, eqy], (a, b))
+
+    sa, sb = map(float, result.values())
+
+    if sa % 1 != 0 or sb % 1 != 0:
+        continue
 
     if (
-        Position(machine.a.x * a + machine.b.x * b, machine.a.y * a + machine.b.y * b)
+        Position(
+            machine.a.x * sa + machine.b.x * sb, machine.a.y * sa + machine.b.y * sb
+        )
         == machine.prize
     ):
-        answer += a * 3 + b
+        answer += int(sa * 3 + sb)
 
 
 print(answer)
