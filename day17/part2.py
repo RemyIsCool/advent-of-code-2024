@@ -107,6 +107,7 @@ def search_for_a(program: list[int]):
 
     while queue:
         expected = program[len(program) - iteration - 1 :]
+
         if iteration == len(program):
             return min(queue)
 
