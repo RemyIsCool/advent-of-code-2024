@@ -1,8 +1,6 @@
 from math import inf
 from typing import TypeAlias
 
-from tqdm import tqdm
-
 Position: TypeAlias = tuple[int, int]
 
 SIZE = 70
